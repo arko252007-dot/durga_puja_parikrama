@@ -11,6 +11,10 @@ import { createMelaGround } from './mela/MelaGround.js';
 import { FirstPersonController } from './controls/FirstPersonController.js';
 import { SpatialAudioManager } from './audio/SpatialAudioManager.js';
 import { MobileControlsManager } from './mobile/MobileControlsManager.js';
+import { inject } from '@vercel/analytics';
+
+// Initialize Vercel Web Analytics
+inject();
 
 class Application {
   constructor() {
