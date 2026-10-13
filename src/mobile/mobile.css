@@ -1,0 +1,185 @@
+/* ==========================================================================
+   Mobile-Specific Stylesheet — Isolated Touch Controls & Mobile Layout
+   ========================================================================== */
+
+/* Fullscreen touch control overlay */
+.mobile-controls-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 50;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  overflow: hidden;
+}
+
+/* Left-hand virtual joystick touch interaction zone */
+.joystick-zone {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 48vw;
+  height: 52vh;
+  pointer-events: auto;
+  touch-action: none;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  padding-left: calc(24px + env(safe-area-inset-left, 0px));
+}
+
+/* Translucent circular joystick base */
+.joystick-base {
+  position: relative;
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(245, 239, 224, 0.08) 0%, rgba(245, 239, 224, 0.02) 100%);
+  border: 1.5px solid rgba(245, 239, 224, 0.22);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
+  transition: opacity 0.25s ease, border-color 0.25s ease;
+  opacity: 0.65;
+}
+
+.joystick-base.active {
+  opacity: 0.95;
+  border-color: rgba(245, 183, 61, 0.55);
+}
+
+/* Joystick thumb knob */
+.joystick-knob {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(245, 183, 61, 0.65) 0%, rgba(212, 136, 23, 0.45) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  touch-action: none;
+  will-change: transform;
+}
+
+/* Right-hand swipe look interaction zone */
+.look-zone {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 52vw;
+  height: 100%;
+  pointer-events: auto;
+  touch-action: none;
+}
+
+/* Mobile-responsive adjustments for loading screen */
+@media (max-width: 768px) {
+  .loading-content {
+    max-width: 90vw;
+    padding: 16px;
+    gap: 18px;
+  }
+
+  .loading-title {
+    font-size: 22px;
+  }
+
+  .loading-instructions {
+    font-size: 13.5px;
+  }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .loading-content {
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .loading-title {
+    font-size: 19px;
+  }
+
+  .loading-instructions {
+    font-size: 12px;
+    gap: 4px;
+  }
+
+  .joystick-base {
+    width: 96px;
+    height: 96px;
+  }
+
+  .joystick-knob {
+    width: 38px;
+    height: 38px;
+  }
+}
+
+/* ==========================================================================
+   Mandatory Mobile Landscape Orientation Lock Overlay
+   ========================================================================== */
+
+.orientation-lock-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #080a12;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+.orientation-lock-overlay.hidden {
+  display: none !important;
+}
+
+.orientation-lock-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  max-width: 320px;
+}
+
+.orientation-icon {
+  width: 52px;
+  height: 52px;
+  color: #f5b73d;
+  animation: rotatePhone 2.2s ease-in-out infinite;
+}
+
+@keyframes rotatePhone {
+  0%, 20% {
+    transform: rotate(0deg);
+  }
+  50%, 80% {
+    transform: rotate(-90deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.orientation-text {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #f5efe0;
+  letter-spacing: 0.3px;
+}

@@ -1,0 +1,18 @@
+{
+  "name": "durga-puja-world",
+  "version": "1.0.0",
+  "description": "Immersive 3D Kolkata Durga Puja Pandal in Three.js",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "three": "^0.186.1"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^24.40.0",
+    "vite": "^8.3.4"
+  }
+}
