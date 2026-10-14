@@ -18,6 +18,7 @@ export class OrientationLock {
     this.overlay = null;
     this.landscapeCallbacks = [];
     this.hasAttemptedLock = false;
+    this.isActive = false; // Remains hidden during initial loading screen
 
     if (this.isMobile) {
       this.init();
@@ -46,7 +47,7 @@ export class OrientationLock {
   initOverlay() {
     this.overlay = document.createElement('div');
     this.overlay.id = 'orientation-lock-overlay';
-    this.overlay.className = 'orientation-lock-overlay';
+    this.overlay.className = 'orientation-lock-overlay hidden';
 
     this.overlay.innerHTML = `
       <div class="orientation-lock-content">
@@ -110,7 +111,11 @@ export class OrientationLock {
     const inPortrait = this.isPortrait();
 
     if (inPortrait) {
-      this.overlay.classList.remove('hidden');
+      if (this.isActive) {
+        this.overlay.classList.remove('hidden');
+      } else {
+        this.overlay.classList.add('hidden');
+      }
       if (this.onOrientationChange) {
         this.onOrientationChange(false);
       }
@@ -126,6 +131,16 @@ export class OrientationLock {
         try { cb(); } catch (e) {}
       }
     }
+  }
+
+  /**
+   * Activates orientation monitoring and displays the portrait suggestion overlay
+   * if the device is currently in portrait mode.
+   * Called only AFTER loading screen completes and exact controls have been shown.
+   */
+  activate() {
+    this.isActive = true;
+    this.checkOrientation();
   }
 
   /**

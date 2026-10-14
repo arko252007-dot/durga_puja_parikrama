@@ -93,8 +93,8 @@ export class MobileControlsManager {
     const instructionsEl = document.querySelector('.loading-instructions');
     if (instructionsEl) {
       instructionsEl.innerHTML = `
-        <p><strong>Left Side</strong> — Touch joystick to move</p>
-        <p><strong>Right Side</strong> — Swipe screen to look around</p>
+        <p><strong>Virtual Joystick</strong> — Move</p>
+        <p><strong>Swipe (Right Screen)</strong> — Look around</p>
       `;
     }
   }

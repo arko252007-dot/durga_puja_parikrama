@@ -12,14 +12,26 @@
       <div class="loading-content">
         <h1 class="loading-title">Durga Puja Parikrama</h1>
         <div class="loading-spinner"></div>
-        <div class="loading-instructions">
-          <p><strong>W A S D</strong> — Move</p>
-          <p><strong>Mouse</strong> — Look around</p>
-          <p><strong>ESC</strong> — Release mouse / exit mouse look</p>
-        </div>
+        <div id="loading-instructions" class="loading-instructions"></div>
         <div id="loading-error" class="loading-error"></div>
       </div>
     </div>
+    <script>
+      (function() {
+        var hasTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
+        var isCoarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+        var isSmall = window.innerWidth <= 1024 || window.innerHeight <= 1024;
+        var isMobile = hasTouch && (isCoarse || isSmall);
+        var container = document.getElementById('loading-instructions');
+        if (container) {
+          if (isMobile) {
+            container.innerHTML = '<p><strong>Virtual Joystick</strong> — Move</p><p><strong>Swipe (Right Screen)</strong> — Look around</p>';
+          } else {
+            container.innerHTML = '<p><strong>W A S D</strong> — Move</p><p><strong>Mouse</strong> — Look around</p><p><strong>ESC</strong> — Release mouse / exit mouse look</p>';
+          }
+        }
+      })();
+    </script>
     <div id="canvas-container"></div>
     <script type="module" src="/src/main.js"></script>
   </body>

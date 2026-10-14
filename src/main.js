@@ -11,6 +11,7 @@ import { createMelaGround } from './mela/MelaGround.js';
 import { FirstPersonController } from './controls/FirstPersonController.js';
 import { SpatialAudioManager } from './audio/SpatialAudioManager.js';
 import { MobileControlsManager } from './mobile/MobileControlsManager.js';
+import { isMobileDevice } from './mobile/isMobile.js';
 import { inject } from '@vercel/analytics';
 
 // Initialize Vercel Web Analytics
@@ -264,6 +265,23 @@ async function init() {
   const loadingScreen = document.getElementById('loading-screen');
   const errorElement = document.getElementById('loading-error');
   const spinner = document.querySelector('.loading-spinner');
+  const instructionsContainer = document.getElementById('loading-instructions');
+
+  // Verify and ensure exact device controls are displayed on loading screen
+  if (instructionsContainer) {
+    if (isMobileDevice()) {
+      instructionsContainer.innerHTML = `
+        <p><strong>Virtual Joystick</strong> — Move</p>
+        <p><strong>Swipe (Right Screen)</strong> — Look around</p>
+      `;
+    } else {
+      instructionsContainer.innerHTML = `
+        <p><strong>W A S D</strong> — Move</p>
+        <p><strong>Mouse</strong> — Look around</p>
+        <p><strong>ESC</strong> — Release mouse / exit mouse look</p>
+      `;
+    }
+  }
 
   try {
     const app = new Application();
@@ -282,15 +300,8 @@ async function init() {
 
     // Yield to the browser so the rendered frame is fully ready
     await new Promise((resolve) => requestAnimationFrame(resolve));
-    await new Promise((resolve) => setTimeout(resolve, 350));
-
-    // Enable player controls once the world is fully rendered and ready
-    app.controller.enabled = true;
-
-    // Start all spatial audio sources immediately the exact second the loading screen finishes
-    if (app.audio) {
-      app.audio.startSoundscapeOnLoad();
-    }
+    // Ensure comfortable duration (~600ms) to clearly view the exact controls on loading screen
+    await new Promise((resolve) => setTimeout(resolve, 600));
 
     // Helper to dismiss loading screen
     const dismissLoadingScreen = () => {
@@ -304,14 +315,29 @@ async function init() {
       }
     };
 
-    // Keep loading screen visible until world is ready AND device is in landscape orientation.
-    // Do not reveal playable world while device is still in portrait mode.
-    if (app.mobileControls && app.mobileControls.orientationLock && app.mobileControls.orientationLock.isPortrait()) {
-      app.mobileControls.orientationLock.onLandscape(() => {
-        dismissLoadingScreen();
+    // 1. Loading screen finishes: dismiss loading screen after user has seen exact controls
+    dismissLoadingScreen();
+
+    const orientationLock = app.mobileControls && app.mobileControls.orientationLock;
+
+    if (orientationLock) {
+      // 2. For mobile UI: AFTER showing exact controls and loading finishes,
+      // activate orientation monitoring. If in portrait, it will prompt to rotate to landscape.
+      orientationLock.activate();
+
+      // 3. Once device is confirmed in landscape mode, enable controls and audio
+      orientationLock.onLandscape(() => {
+        app.controller.enabled = true;
+        if (app.audio) {
+          app.audio.startSoundscapeOnLoad();
+        }
       });
     } else {
-      dismissLoadingScreen();
+      // Desktop: immediately enable controls and start audio
+      app.controller.enabled = true;
+      if (app.audio) {
+        app.audio.startSoundscapeOnLoad();
+      }
     }
 
     return app;
